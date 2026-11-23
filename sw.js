@@ -1,4 +1,4 @@
-const V = 'stride-logistics-g2';
+const V = 'stride-logistics-g3';
 const ASSETS = ['./', 'index.html', 'app.js', 'config.js', 'template.xlsx', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));

@@ -152,7 +152,7 @@ async function doLogin() {
     if (!tokClient && await gsiReady(3000)) tokClient = google.accounts.oauth2.initTokenClient({ client_id: CFG.googleClientId, scope: CFG.scopes.join(' '), callback: () => { } });
     const b = $('lg-btn'); if (b) b.disabled = true;
     const gr = await requestToken(account ? 'consent' : 'select_account consent');   // always show Google's permission checkboxes
-    if (!TEST_TOKEN() && window.google && !google.accounts.oauth2.hasGrantedAllScopes(gr, 'https://www.googleapis.com/auth/drive.file')) {
+    if (!TEST_TOKEN() && window.google && !google.accounts.oauth2.hasGrantedAllScopes(gr, 'https://www.googleapis.com/auth/drive')) {
       try { google.accounts.oauth2.revoke(gr.access_token, () => { }); } catch (e) { }
       throw new Error('Google did not get permission to use Drive. Sign in again and tick ALL the checkboxes, especially the one about Drive files.');
     }
@@ -215,7 +215,9 @@ async function folderPath(path) {
   for (const seg of path.split('/').filter(Boolean)) {
     acc += '/' + seg;
     if (S.fids[acc]) { parent = S.fids[acc]; continue; }
-    let f = await findOne(`name='${qs(seg)}' and mimeType='application/vnd.google-apps.folder' and '${parent}' in parents and trashed=false`);
+    let f = null;
+    if (parent === 'root') f = await findOne(`name='${qs(seg)}' and mimeType='application/vnd.google-apps.folder' and sharedWithMe=true and trashed=false`);   // folder shared by the owner
+    if (!f) f = await findOne(`name='${qs(seg)}' and mimeType='application/vnd.google-apps.folder' and '${parent}' in parents and trashed=false`);
     if (!f) f = await gapi(`${DRV}/files?fields=id,webViewLink`, { method: 'POST', body: { name: seg, mimeType: 'application/vnd.google-apps.folder', parents: [parent] } });
     S.fids[acc] = f.id; parent = f.id;
   }
