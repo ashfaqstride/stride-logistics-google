@@ -151,7 +151,12 @@ async function doLogin() {
   try {
     if (!tokClient && await gsiReady(3000)) tokClient = google.accounts.oauth2.initTokenClient({ client_id: CFG.googleClientId, scope: CFG.scopes.join(' '), callback: () => { } });
     const b = $('lg-btn'); if (b) b.disabled = true;
-    const tok = keepToken(await requestToken(account ? '' : 'select_account'));
+    const gr = await requestToken(account ? '' : 'select_account');
+    if (!TEST_TOKEN() && window.google && !google.accounts.oauth2.hasGrantedAllScopes(gr, 'https://www.googleapis.com/auth/drive.file')) {
+      try { google.accounts.oauth2.revoke(gr.access_token, () => { }); } catch (e) { }
+      throw new Error('Google did not get permission to use Drive. Sign in again and tick ALL the checkboxes, especially the one about Drive files.');
+    }
+    const tok = keepToken(gr);
     const u = await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + tok } })).json();
     account = { name: u.name || u.email, username: u.email };
     lsSet('stride_acct', account);
@@ -185,6 +190,10 @@ async function gapi(url, o = {}) {
     if (res.status === 401) { lsSet('stride_tok', null); if (a < 1 && !TEST_TOKEN()) continue; const e = new Error('Sign in again'); e.auth = true; throw e; }
     if (!res.ok) {
       const t = await res.text().catch(() => '');
+      if (res.status === 403 && /insufficient authentication scopes|ACCESS_TOKEN_SCOPE_INSUFFICIENT/i.test(t)) {
+        lsSet('stride_tok', null); lsSet('stride_acct', null); account = null;
+        const e = new Error('Sign in again and tick ALL the Google permission checkboxes (Drive files).'); e.auth = true; throw e;
+      }
       const m = /"message"\s*:\s*"([^"]*)"/.exec(t);
       const e = new Error('Google ' + res.status + ': ' + (m ? m[1] : t.slice(0, 150)));
       e.status = res.status; throw e;
