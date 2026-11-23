@@ -55,7 +55,7 @@ const DB = (() => {
   let db;
   const open = () => new Promise((res, rej) => {
     if (db) return res(db);
-    const r = indexedDB.open('stride-logistics', 1);
+    const r = indexedDB.open('stride-logistics-google', 1);
     r.onupgradeneeded = () => { r.result.createObjectStore('kv'); r.result.createObjectStore('photos'); };
     r.onsuccess = () => { db = r.result; res(db); };
     r.onerror = () => rej(r.error);
@@ -151,7 +151,7 @@ async function doLogin() {
   try {
     if (!tokClient && await gsiReady(3000)) tokClient = google.accounts.oauth2.initTokenClient({ client_id: CFG.googleClientId, scope: CFG.scopes.join(' '), callback: () => { } });
     const b = $('lg-btn'); if (b) b.disabled = true;
-    const gr = await requestToken(account ? '' : 'select_account');
+    const gr = await requestToken(account ? 'consent' : 'select_account consent');   // always show Google's permission checkboxes
     if (!TEST_TOKEN() && window.google && !google.accounts.oauth2.hasGrantedAllScopes(gr, 'https://www.googleapis.com/auth/drive.file')) {
       try { google.accounts.oauth2.revoke(gr.access_token, () => { }); } catch (e) { }
       throw new Error('Google did not get permission to use Drive. Sign in again and tick ALL the checkboxes, especially the one about Drive files.');
