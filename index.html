@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1F4E78">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Stride Logistics</title>
+<style>
+:root{--b:#1F4E78;--b2:#2E75B6;--g:#548235;--o:#C55A11;--r:#c00000;--bg:#F3F6FA;--t:#1b1f24;--m:#6b7480;--line:#dde3ea}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:#cfd6de;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--t);display:flex;justify-content:center}
+#app{width:100%;max-width:420px;height:100vh;height:100dvh;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 30px rgba(0,0,0,.2)}
+header{background:var(--b);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;min-height:56px;flex:none}
+header h1{font-size:17px;margin:0;flex:1;font-weight:600}
+header button.back{background:none;border:0;color:#fff;font-size:24px;padding:0 6px 0 0}
+.dot{width:10px;height:10px;border-radius:50%;background:#4cd964;display:inline-block;flex:none}
+.dot.off{background:#ff9500}
+.badge{background:#fff;color:var(--b);font-size:12px;font-weight:700;border-radius:12px;padding:3px 9px;white-space:nowrap}
+.badge.pend{background:#ffe3c4;color:var(--o)}
+main{flex:1;overflow-y:auto;padding:14px 14px 90px}
+.screen{display:none;flex-direction:column;flex:1;min-height:0}
+.screen.on{display:flex}
+label{display:block;font-size:12px;font-weight:600;color:var(--m);margin:12px 0 5px;text-transform:uppercase;letter-spacing:.03em}
+input,select,textarea{width:100%;font:inherit;font-size:16px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:18px;padding:8px 12px;font-size:14px;cursor:pointer}
+.chip.sel{background:var(--b);color:#fff;border-color:var(--b)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}.seg .chip{flex:1;text-align:center;border-radius:10px;padding:12px;min-width:90px}
+.btn{width:100%;border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:600;background:var(--b);color:#fff;margin-top:18px}
+.btn[disabled]{opacity:.5}
+.btn.alt{background:#fff;color:var(--b);border:1px solid var(--b)}
+.btn.cam{background:#fff;color:var(--b);border:2px dashed var(--b2);margin-top:6px}
+.btn.sm{padding:10px;font-size:14px;margin-top:10px}
+.btn.red{background:#fff;color:var(--r);border:1px solid var(--r)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 10px;text-align:center;font-weight:600;font-size:15px;cursor:pointer;position:relative}
+.tile span{display:block;font-size:28px;margin-bottom:6px}
+.tile i{position:absolute;top:8px;right:10px;background:var(--o);color:#fff;font-style:normal;font-size:11px;border-radius:10px;padding:1px 7px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.muted{color:var(--m);font-size:13px}
+.n{display:flex;gap:6px;margin-top:8px}
+.n div{flex:1;background:var(--bg);border-radius:8px;padding:6px;text-align:center;font-size:12px;color:var(--m)}
+.n b{display:block;font-size:18px;color:var(--t)}
+.pill{font-size:11px;border-radius:10px;padding:2px 8px;background:#e7f0fa;color:var(--b);display:inline-block;margin:4px 4px 0 0}
+.pill.s{background:#e2efda;color:var(--g)}.pill.w{background:#ddebf7;color:var(--b2)}
+.pill.p{background:#ffe3c4;color:var(--o)}.pill.ok{background:#e2efda;color:var(--g)}
+#toast{position:absolute;left:14px;right:14px;bottom:20px;background:#1b1f24;color:#fff;padding:12px 14px;border-radius:12px;font-size:14px;opacity:0;transform:translateY(20px);transition:.25s;pointer-events:none;z-index:9}
+#toast.on{opacity:1;transform:none}
+.hint{font-size:12px;color:var(--m);margin-top:12px}
+.login{padding:40px 22px;text-align:center}
+.login .logo{width:84px;height:84px;border-radius:20px;margin:20px auto 10px;display:block}
+.ph{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.ph div{position:relative}
+.ph img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.ph button{position:absolute;top:-7px;right:-7px;width:22px;height:22px;border-radius:50%;border:0;background:#c00;color:#fff;font-size:13px;line-height:22px;padding:0}
+.tl{border-left:3px solid var(--line);margin:8px 0 0 4px;padding-left:10px}
+.tl div{margin:7px 0;font-size:13px}
+.in{color:var(--g);font-weight:700}.out{color:var(--o);font-weight:700}
+.note{background:#fff7e0;border:1px solid #f1d98a;border-radius:12px;padding:10px 12px;font-size:12px;color:#6b5400;margin-bottom:12px}
+.note.err{background:#fde8e8;border-color:#f3b1b1;color:#8a1c1c}
+.tabs{display:flex;gap:6px;margin:10px 0}.tabs .chip{flex:1;text-align:center;border-radius:10px;padding:9px 4px;font-size:13px}
+.dates{display:none;gap:8px;margin-top:8px}.dates input{padding:9px}
+.li{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.li span{flex:1;word-break:break-word}
+.li button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:14px}
+.li button.x{color:var(--r)}
+.add{display:flex;gap:8px;margin-top:10px}.add button{border:0;background:var(--b);color:#fff;border-radius:10px;padding:0 16px;font-weight:600}
+a{color:var(--b2)}
+</style></head><body>
+<div id="app">
+<input type="file" id="ph-in" accept="image/*" capture="environment" style="display:none">
+
+<!-- LOGIN -->
+<div class="screen on" id="s-login">
+ <main class="login">
+  <img class="logo" src="icon-192.png" alt="">
+  <h2 style="margin:6px 0 2px">Stride Logistics</h2>
+  <div class="muted">Goods tracker for the trading section</div>
+  <div class="note err" id="lg-err" style="display:none;text-align:left;margin-top:16px"></div>
+  <button class="btn" id="lg-btn" onclick="doLogin()">Sign in with Google</button>
+  <div class="hint">Sign in with the Google account that owns the tracker. You only need to sign in once. After that the app works offline.</div>
+ </main>
+</div>
+
+<!-- HOME -->
+<div class="screen" id="s-home">
+ <header><h1 id="hi">Hello</h1><span class="badge" id="pb">All synced</span><span class="dot" id="dt"></span></header>
+ <main>
+  <div class="note err" id="h-err" style="display:none"></div>
+  <div class="grid">
+   <div class="tile" onclick="show('po')"><span>&#128221;</span>New PO</div>
+   <div class="tile" onclick="openReceive()"><span>&#128229;</span>Receive Items</div>
+   <div class="tile" onclick="openDispatch()"><span>&#128666;</span>Dispatch Items</div>
+   <div class="tile" onclick="show('stk')"><span>&#128202;</span>Stock</div>
+   <div class="tile" onclick="show('fnd')"><span>&#128269;</span>Find PO</div>
+   <div class="tile" onclick="show('syn')"><span>&#128260;</span>Sync<i id="sy-n" style="display:none"></i></div>
+   <div class="tile" onclick="show('set')" style="grid-column:1/-1"><span>&#9881;&#65039;</span>Settings</div>
+  </div>
+  <div class="card" style="margin-top:16px"><b>Status</b><div class="muted" id="cx"></div></div>
+ </main>
+</div>
+
+<!-- NEW PO -->
+<div class="screen" id="s-po">
+ <header><button class="back" onclick="show('home')">&#8249;</button><h1>New PO</h1><span class="dot"></span></header>
+ <main>
+  <label>PO number</label><input id="po-no" placeholder="PO-2026-103" autocapitalize="characters">
+  <label>PO date</label><input id="po-d" type="date">
+  <label>Supplier</label><input id="po-sup" placeholder="Supplier name">
+  <label>Sales handler (optional)</label><select id="po-h"></select>
+  <label>Remarks (optional)</label><input id="po-rm">
+  <div class="hint">No SQ needed here. SQs are entered only when items are dispatched.</div>
+  <button class="btn" onclick="savePO()">Save PO &amp; add items</button>
+ </main>
+</div>
+
+<!-- RECEIVE -->
+<div class="screen" id="s-rec">
+ <header><button class="back" onclick="show('home')">&#8249;</button><h1>Receive Item</h1><span class="dot"></span></header>
+ <main>
+  <label>PO</label><select id="r-po"></select>
+  <label>Date received</label><input id="r-date" type="date">
+  <label>Item type</label><div class="chips" id="r-types"></div>
+  <input id="r-type-o" placeholder="Type the item name" style="display:none;margin-top:8px">
+  <label>Brand</label><select id="r-brand" onchange="onOther('r-brand','r-brand-o')"></select>
+  <input id="r-brand-o" placeholder="Type the brand" style="display:none;margin-top:8px">
+  <label>Product code</label><input id="r-code" placeholder="e.g. PT-001">
+  <div class="row" style="gap:10px;align-items:flex-end">
+   <div style="flex:2"><label>Quantity</label><input id="r-qty" type="number" inputmode="decimal" placeholder="0"></div>
+   <div style="flex:1"><label>Unit</label><select id="r-unit"></select></div>
+  </div>
+  <label>Stored at</label><div class="seg" id="r-store"></div>
+  <label>Where it should go (optional)</label><input id="r-dest" placeholder="Client site / project">
+  <label>Planned dispatch date (optional)</label><input id="r-plan" type="date">
+  <label>Received by (optional)</label><select id="r-by" onchange="onOther('r-by','r-by-o')"></select>
+  <input id="r-by-o" placeholder="Type the name" style="display:none;margin-top:8px">
+  <label>Remarks (optional)</label><input id="r-rm">
+  <label>Received photos</label>
+  <div class="ph" id="r-ph"></div>
+  <button class="btn cam" onclick="addPhoto('r')">&#128247; Add photo (<span id="r-phn">0</span>/<span class="mp">5</span>)</button>
+  <button class="btn" onclick="saveItem()">Save item</button>
+ </main>
+</div>
+
+<!-- DISPATCH -->
+<div class="screen" id="s-dsp">
+ <header><button class="back" onclick="show('home')">&#8249;</button><h1>Dispatch Item</h1><span class="dot"></span></header>
+ <main>
+  <label>PO</label><select id="d-po" onchange="fillItems()"></select>
+  <label>Item</label><select id="d-item"></select>
+  <label>Date dispatched</label><input id="d-date" type="date">
+  <label>SQ number</label><input id="d-sq" placeholder="SQ-4502" autocapitalize="characters">
+  <label>Client</label><input id="d-cl" placeholder="Client name">
+  <label>Sales handler</label><select id="d-h"></select>
+  <label>Quantity sent</label><input id="d-qty" type="number" inputmode="decimal" placeholder="0">
+  <label>Sent to (optional)</label><input id="d-dest" placeholder="Site / address">
+  <label>Delivered by</label><select id="d-by" onchange="onOther('d-by','d-by-o')"></select>
+  <input id="d-by-o" placeholder="Type the name" style="display:none;margin-top:8px">
+  <label>Dispatch mode</label><select id="d-mode"></select>
+  <label>Status</label>
+  <div class="seg" id="d-st"><div class="chip" onclick="pick('d-st',this)">Pending</div><div class="chip sel" onclick="pick('d-st',this)">In Transit</div><div class="chip" onclick="pick('d-st',this)">Delivered</div></div>
+  <label>Remarks (optional)</label><input id="d-rm">
+  <label>Photos</label>
+  <div class="ph" id="d-ph"></div>
+  <button class="btn cam" onclick="addPhoto('d')">&#128247; Add photo (<span id="d-phn">0</span>/<span class="mp">5</span>)</button>
+  <button class="btn" onclick="saveDsp()">Save dispatch</button>
+ </main>
+</div>
+
+<!-- MARK DELIVERED -->
+<div class="screen" id="s-dlv">
+ <header><button class="back" onclick="show('fnd')">&#8249;</button><h1>Mark delivered</h1><span class="dot"></span></header>
+ <main>
+  <div class="card" id="v-info"></div>
+  <label>Delivery date</label><input id="v-date" type="date">
+  <label>Delivery photos</label>
+  <div class="ph" id="v-ph"></div>
+  <button class="btn cam" onclick="addPhoto('v')">&#128247; Add photo (<span id="v-phn">0</span>/<span class="mp">5</span>)</button>
+  <button class="btn" onclick="saveDeliver()">Mark as delivered</button>
+ </main>
+</div>
+
+<!-- STOCK -->
+<div class="screen" id="s-stk">
+ <header><button class="back" onclick="show('home')">&#8249;</button><h1>Stock</h1><span class="dot"></span></header>
+ <main>
+  <input id="s-q" placeholder="Search PO, item, code or brand" oninput="renderStock()">
+  <label>Location</label>
+  <div class="seg" id="s-loc"></div>
+  <label>Period</label>
+  <div class="chips" id="s-per">
+   <div class="chip" onclick="setPer(this)">48 hrs</div><div class="chip sel" onclick="setPer(this)">1 month</div><div class="chip" onclick="setPer(this)">2 months</div><div class="chip" onclick="setPer(this)">3 months</div><div class="chip" onclick="setPer(this)">Custom</div><div class="chip" onclick="setPer(this)">All</div>
+  </div>
+  <div class="dates" id="s-dates"><input type="date" id="s-from" onchange="renderStock()"><input type="date" id="s-to" onchange="renderStock()"></div>
+  <div class="tabs" id="s-view"><div class="chip sel" onclick="pick('s-view',this);renderStock()">Items</div><div class="chip" onclick="pick('s-view',this);renderStock()">Movements in / out</div></div>
+  <div class="muted" id="s-range" style="margin-bottom:8px"></div>
+  <div id="s-list"></div>
+ </main>
+</div>
+
+<!-- FIND PO -->
+<div class="screen" id="s-fnd">
+ <header><button class="back" onclick="show('home')">&#8249;</button><h1>Find PO</h1><span class="dot"></span></header>
+ <main>
+  <input id="f-q" placeholder="Type a PO number" oninput="renderFind()" list="po-dl">
+  <datalist id="po-dl"></datalist>
+  <div id="f-list" style="margin-top:12px"></div>
+ </main>
+</div>
+
+<!-- SYNC -->
+<div class="screen" id="s-syn">
+ <header><button class="back" onclick="show('home')">&#8249;</button><h1>Sync</h1><span class="dot"></span></header>
+ <main>
+  <div class="card"><b id="sy-t">All synced</b><div class="muted" id="sy-s"></div></div>
+  <button class="btn" id="sy-b" onclick="trySync(true)">Sync now</button>
+  <div class="note err" id="sy-err" style="display:none;margin-top:12px"></div>
+  <label>Waiting to upload</label>
+  <div id="sy-q"></div>
+ </main>
+</div>
+
+<!-- SETTINGS -->
+<div class="screen" id="s-set">
+ <header><button class="back" onclick="show('home')">&#8249;</button><h1>Settings</h1><span class="dot"></span></header>
+ <main>
+  <div class="card">
+   <b>App</b>
+   <label>Max photos per entry</label><input id="c-mp" type="number" min="1" max="20" inputmode="numeric">
+   <label>Google Drive folder</label><input id="c-folder">
+   <label>Sheet name</label><input id="c-file">
+   <a id="c-open" class="btn sm" target="_blank" rel="noopener" style="display:none;margin-bottom:8px;text-decoration:none">Open the Google Sheet</a>
+   <button class="btn sm" onclick="saveCfg()">Save app settings</button>
+  </div>
+  <div id="set-lists"></div>
+  <div class="card"><b>Account</b><div class="muted" id="c-user"></div><button class="btn red sm" onclick="doLogout()">Sign out</button></div>
+ </main>
+</div>
+
+<div id="toast"></div>
+</div>
+<script src="config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="app.js"></script>
+</body></html>
